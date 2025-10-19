@@ -1,0 +1,101 @@
+<header class="bg-gray-800 p-4 flex justify-between items-center text-white">
+    <div class="text-2xl font-bold">IBC Solutions</div>
+    <div class="flex items-center space-x-4 text-sm">
+        <div class="text-right">
+            <div class="font-semibold">{{ userName }}</div>
+            <div class="text-gray-400">Username: {{ userIdentifier }}</div> 
+        </div>
+        <button (click)="logout()"
+                class="flex items-center text-red-400 hover:text-red-500 transition duration-150">
+            <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            Logout
+        </button>
+    </div>
+</header>
+
+<div class="p-6 bg-gray-900 min-h-screen text-white">
+
+    <div *ngIf="transferMessage" 
+        [ngClass]="{'bg-red-700 text-red-100': isError, 'bg-green-700 text-green-100': !isError}"
+        class="p-4 mb-4 text-sm rounded-lg">
+        {{ transferMessage }}
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+            <h4 class="text-xl text-gray-400 mb-2">Current Balance</h4>
+            <div class="flex items-end justify-between">
+                <span class="text-4xl font-light text-blue-400">
+                    {{ account?.balance | currency:'USD':'symbol':'1.2-2' }}
+                </span>
+                <span class="text-gray-500 text-sm">Account #{{ account?.accountNumber }}</span>
+            </div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl"><h4 class="text-xl text-gray-400 mb-2">Recent Transfers</h4><p class="text-4xl font-light">0</p><span class="text-gray-500 text-sm">This month</span></div>
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl"><h4 class="text-xl text-gray-400 mb-2">Active Accounts</h4><p class="text-4xl font-light">1</p><span class="text-gray-500 text-sm">Ready for transfers</span></div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+            <h3 class="text-2xl font-semibold mb-4">Your Account</h3>
+            <p class="text-gray-400 mb-4">Manage your primary banking account</p>
+            
+            <div *ngIf="account" class="flex justify-between items-center bg-gray-700 p-4 rounded-lg">
+                <div>
+                    <div class="font-medium text-lg">Primary Account</div>
+                    <div class="text-sm text-gray-400">Account #{{ account.accountNumber }}</div>
+                </div>
+                <div class="text-xl font-semibold text-green-400">
+                    {{ account.balance | currency:'USD':'symbol':'1.2-2' }}
+                </div>
+            </div>
+            <div *ngIf="!account" class="text-center p-8 text-gray-400">Loading account details...</div>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-lg shadow-xl">
+            <h3 class="text-2xl font-semibold mb-4">Transfer Funds</h3>
+            <p class="text-gray-400 mb-6">Send money to any recipient account number.</p>
+
+            <form [formGroup]="transferForm" (ngSubmit)="onTransferSubmit()">
+                
+                <div class="mb-4">
+                    <label for="recipient" class="block text-gray-300 text-sm font-medium mb-2">Recipient Account Number</label>
+                    <input 
+                        type="text" 
+                        id="recipient" 
+                        formControlName="recipientAccountNumber"
+                        placeholder="e.g., 1234567890"
+                        class="w-full px-4 py-2 bg-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+                    >
+                    <p *ngIf="transferForm.get('recipientAccountNumber')?.invalid && transferForm.get('recipientAccountNumber')?.touched" class="text-red-400 text-xs mt-1">Recipient account is required.</p>
+                </div>
+                
+                <div class="mb-6">
+                    <label for="amount" class="block text-gray-300 text-sm font-medium mb-2">Amount ($)</label>
+                    <input 
+                        type="number" 
+                        id="amount" 
+                        formControlName="amount"
+                        step="0.01"
+                        min="0.01"
+                        placeholder="e.g., 100.00"
+                        class="w-full px-4 py-2 bg-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+                    >
+                    <p *ngIf="transferForm.get('amount')?.hasError('required') && transferForm.get('amount')?.touched" class="text-red-400 text-xs mt-1">Amount is required.</p>
+                    <p *ngIf="transferForm.get('amount')?.hasError('min') && transferForm.get('amount')?.touched" class="text-red-400 text-xs mt-1">Amount must be greater than zero.</p>
+                </div>
+                
+                <button 
+                    type="submit" 
+                    [disabled]="transferForm.invalid || !account"
+                    class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                    [ngClass]="{'hover:bg-blue-700': transferForm.valid && account}"
+                >
+                    Submit Transfer
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

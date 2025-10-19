@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+
+// Import Tailwind directives
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Global Typography and Background
+body {
+  font-family: 'Roboto', Arial, sans-serif; 
+  background-color: #F5F5F5; 
+  color: #333333;
+  margin: 0;
+  height: 100vh;
+}

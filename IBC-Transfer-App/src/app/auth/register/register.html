@@ -1,0 +1,109 @@
+<div class="flex h-screen bg-gray-900 text-white">
+  
+  <div class="hidden md:flex w-1/2 bg-cover bg-center items-center justify-center p-8 relative"
+    style="background-image: url('/assets/images/city-bg.jpg');"> <div class="absolute inset-0 bg-black opacity-50"></div>
+    <div class="relative z-10 text-center text-white">
+      <h1 class="text-5xl font-bold mb-4">IBC Solutions</h1>
+      <p class="text-xl mb-2">Secure Fund Transfer Platform</p>
+      <p class="text-lg">Expertise at your Disposal</p>
+    </div>
+  </div>
+
+  <div class="w-full md:w-1/2 flex items-center justify-center p-6">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-md">
+      <h3 class="text-3xl font-semibold mb-2 text-center">Create Account</h3>
+      <p class="text-gray-400 mb-6 text-center text-sm">Join our secure transfer platform</p>
+
+      <div class="flex mb-6 bg-gray-700 rounded-lg p-1">
+        <button 
+          class="flex-1 py-2 px-4 rounded-md font-medium text-gray-400 hover:text-white transition duration-200"
+          routerLink="/login" 
+          routerLinkActive="bg-blue-600 hover:bg-blue-700 text-white"
+        >
+          Login
+        </button>
+        <button 
+          class="flex-1 py-2 px-4 rounded-md font-medium text-white bg-blue-600 transition duration-200"
+          routerLink="/register" 
+          routerLinkActive="bg-blue-600 hover:bg-blue-700" 
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          Sign Up
+        </button>
+      </div>
+
+            <div *ngIf="registrationSuccess" class="p-3 mb-4 text-sm text-green-100 bg-green-700 rounded-lg">
+        Registration complete! Redirecting to login...
+      </div>
+      
+            <div *ngIf="registerError" class="p-3 mb-4 text-sm text-red-100 bg-red-700 rounded-lg">
+        {{ registerError }}
+      </div>
+
+      <form [formGroup]="registerForm" (ngSubmit)="onRegisterSubmit()">
+        
+                <div class="mb-3">
+          <label for="username" class="block text-gray-300 text-sm font-medium mb-2">Username</label>
+          <input 
+            type="text" 
+            id="username" 
+            formControlName="username"
+            placeholder="Choose a username"
+            class="w-full px-4 py-2 bg-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+            [ngClass]="{'border-red-500': registerForm.get('username')?.invalid && registerForm.get('username')?.touched}"
+          >
+          <p *ngIf="registerForm.get('username')?.hasError('required') && registerForm.get('username')?.touched" class="text-red-400 text-xs mt-1">Username is required.</p>
+        </div>
+        
+                <div class="mb-3">
+          <label for="email" class="block text-gray-300 text-sm font-medium mb-2">Email</label>
+          <input 
+            type="email" 
+            id="email" 
+            formControlName="email"
+            placeholder="your.email@example.com"
+            class="w-full px-4 py-2 bg-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+            [ngClass]="{'border-red-500': registerForm.get('email')?.invalid && registerForm.get('email')?.touched}"
+          >
+          <p *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched" class="text-red-400 text-xs mt-1">Email is required.</p>
+        </div>
+        
+                <div class="mb-4">
+          <label for="password" class="block text-gray-300 text-sm font-medium mb-2">Password</label>
+          <input 
+            type="password" 
+            id="password" 
+            formControlName="password"
+            class="w-full px-4 py-2 bg-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+            [ngClass]="{'border-red-500': registerForm.get('password')?.invalid && registerForm.get('password')?.touched}"
+          >
+          <p *ngIf="registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched" class="text-red-400 text-xs mt-1">Password must be at least 6 characters.</p>
+        </div>
+
+                <div class="mb-4">
+          <label for="initialDeposit" class="block text-gray-300 text-sm font-medium mb-2">Initial Deposit ($)</label>
+          <input 
+            type="number" 
+            id="initialDeposit" 
+            formControlName="initialDeposit"
+            step="0.01"
+            min="0.01"
+            placeholder="e.g., 50.00"
+            class="w-full px-4 py-2 bg-gray-700 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-white placeholder-gray-500"
+            [ngClass]="{'border-red-500': registerForm.get('initialDeposit')?.invalid && registerForm.get('initialDeposit')?.touched}"
+          >
+          <p *ngIf="registerForm.get('initialDeposit')?.hasError('min') && registerForm.get('initialDeposit')?.touched" class="text-red-400 text-xs mt-1">Minimum deposit is $0.01.</p>
+        </div>
+        
+        <button 
+          type="submit" 
+          [disabled]="registerForm.invalid || registrationSuccess"
+          class="w-full bg-blue-600 text-white p-3 rounded-lg font-semibold transition duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          [ngClass]="{'hover:bg-blue-700': registerForm.valid}"
+        >
+          Sign Up
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
